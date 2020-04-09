@@ -1,14 +1,6 @@
-
-;; This buffer is for text that is not saved, and for Lisp evaluation.
-;; To create a file, visit it with C-x C-f and enter text in its buffer.
-(defun tokenize (input)
-  """ Tokenizes a list of arguments"""
-  (let ((chunks (split-string input ","))
-	)
-    chunks))
-
 ;; An argument is made up of a name, optional type and optional default value
 (cl-defstruct argument name type default)
+
 
 (defun parse-argument (input)
   "creates an argument from a string"
@@ -27,6 +19,15 @@
    (if (string= (argument-type arg) "") "" (concat ":type " (argument-name arg) ": " (argument-type arg)))))
 
 
+(defun remove-all-str (list target)
+  "removes all occurances of a word from a list"
+  (cond
+   ((null list) ())
+   ((not (stringp (car list))) (cons (car list) (remove-all (cdr list) target)))
+   ((string= (car list) target) (remove-all (cdr list) target))
+   (t (cons (car list) (remove-all (cdr list) target)))))
+
+
 (defun make-docstring (input)
   "makes a docstring form a list of agurmnets"
   (let ((result nil)
@@ -41,14 +42,6 @@
 	(if (< (length result) 2) docstring
 	  (substring docstring 0 -1))))))
 
-
-(defun remove-all-str (list target)
-  "removes all occurances of a word from a list"
-  (cond
-   ((null list) ())
-   ((not (stringp (car list))) (cons (car list) (remove-all (cdr list) target)))
-   ((string= (car list) target) (remove-all (cdr list) target))
-   (t (cons (car list) (remove-all (cdr list) target)))))
 
 
 
